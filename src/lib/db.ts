@@ -78,3 +78,24 @@ export async function addEntry(entry: NewEntry) {
     args: [entry.name, entry.message, entry.website || null],
   });
 }
+
+export async function deleteEntry(id: number) {
+  await db.execute({
+    sql: "DELETE FROM guestbook WHERE id = ?",
+    args: [id],
+  });
+}
+
+type UpdateEntry = {
+  id: number;
+  name: string;
+  message: string;
+  website?: string | null;
+}
+
+export async function updateEntry(entry: UpdateEntry) {
+    await db.execute({
+        sql: "UPDATE guestbook SET name = ?, message = ?, website = ? WHERE id = ?",
+        args: [entry.name, entry.message, entry.website || null, entry.id],
+    });
+}
