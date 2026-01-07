@@ -18,21 +18,21 @@ export default async function Home() {
       <main>
         <header>
           <h1>
-            Simple Guestbook
+            Sudip's Guestbook
           </h1>
           <p>
-            Leave a message for future visitors.
+            Leave a message for me and future visitors.
           </p>
         </header>
 
-        <section className="form-section">
+        <section>
           <h2>Leave Your Mark</h2>
           <GuestbookForm />
         </section>
 
         <section>
           {error ? (
-             <div className="error-box">
+             <div>
                 <h3>Database Error</h3>
                 <p>
                   {error}
