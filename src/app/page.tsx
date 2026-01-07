@@ -1,6 +1,7 @@
 import { GuestbookForm } from "@/components/guestbook-form";
 import { GuestbookEntries } from "@/components/guestbook-entries";
 import { getEntries } from "@/lib/db";
+import { SeedButton } from "@/components/seed-button";
 
 export default async function Home() {
   let entries = [];
@@ -12,6 +13,8 @@ export default async function Home() {
     console.error("Failed to fetch guestbook entries:", e);
     error = "Could not connect to the database. Please check the server configuration.";
   }
+
+  const showSeedButton = !!process.env.ADMIN_SECRET;
 
   return (
     <div className="container">
@@ -33,13 +36,16 @@ export default async function Home() {
         <section>
           {error ? (
              <div>
-                <h3>Database Error</h3>
+                <h3>DatabaseError</h3>
                 <p>
                   {error}
                 </p>
               </div>
           ) : (
-            <GuestbookEntries entries={entries} />
+            <>
+              {showSeedButton && <SeedButton />}
+              <GuestbookEntries entries={entries} />
+            </>
           )}
         </section>
       </main>

@@ -32,6 +32,7 @@ textarea {
 }
 
 button {
+    cursor: pointer;
 }
 
 button:hover {
@@ -49,9 +50,9 @@ button:hover {
 }
 
 .guestbook-entry {
-    border: 1px solid #000;
-    padding: 1rem 1.5rem;
+    border: 2px solid #000;
     border-radius: 9999px;
+    padding: 1rem 2rem;
     margin-bottom: 1rem;
 }
 
@@ -93,6 +94,16 @@ button:hover {
     width: auto;
     text-align: left;
     margin-right: 0;
+    margin-bottom: 0.5rem;
+}
+
+.seed-container {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border: 1px dashed #000;
+}
+
+.seed-container button {
     margin-bottom: 0.5rem;
 }
 

@@ -50,3 +50,41 @@ export async function addEntry(prevState: State, formData: FormData): Promise<St
     };
   }
 }
+
+export type SeedState = {
+  message: string;
+}
+
+export async function seedEntries(secret: string | null): Promise<SeedState> {
+  if (secret !== process.env.ADMIN_SECRET) {
+    return { message: "Unauthorized." };
+  }
+
+  const entriesEnv = process.env.SEED_ENTRIES;
+  if (!entriesEnv) {
+    return { message: "No seed data found in environment variables." };
+  }
+
+  try {
+    const entries = JSON.parse(entriesEnv);
+    if (!Array.isArray(entries)) {
+        throw new Error("SEED_ENTRIES is not a JSON array.");
+    }
+    
+    for (const entry of entries) {
+      const { name, message, website } = entry;
+      if (typeof name !== 'string' || typeof message !== 'string') {
+        console.warn("Skipping invalid seed entry:", entry);
+        continue;
+      }
+      await addEntryToDb({ name, message, website: website || null });
+    }
+    revalidatePath("/");
+    return { message: "Seeding complete." };
+
+  } catch (e) {
+    console.error("Failed to seed entries:", e);
+    const errorMessage = e instanceof Error ? e.message : "An unknown error occurred.";
+    return { message: `Error seeding entries: ${errorMessage}` };
+  }
+}
