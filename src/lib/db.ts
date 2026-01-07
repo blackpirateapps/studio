@@ -7,35 +7,50 @@ export function getDbClient(): Client {
   if (client) {
     return client;
   }
-  const url = process.env.TURSO_DATABASE_URL;
-  const authToken = process.env.TURSO_AUTH_TOKEN;
+  
+  if (process.env.NODE_ENV === 'production') {
+    const url = process.env.TURSO_DATABASE_URL;
+    const authToken = process.env.TURSO_AUTH_TOKEN;
 
-  if (!url) {
-    throw new Error("TURSO_DATABASE_URL is not set");
+    if (!url) {
+      throw new Error("TURSO_DATABASE_URL is not set for production");
+    }
+    
+    client = createClient({
+      url,
+      authToken,
+    });
+
+  } else {
+    // For local development, use a local SQLite file.
+    client = createClient({
+      url: "file:local.db",
+    });
   }
 
-  return createClient({
-    url,
-    authToken,
-  });
+  return client;
 }
 
 const db = getDbClient();
 
 // Create table if not exists
-try {
-    await db.execute(`
-      CREATE TABLE IF NOT EXISTS guestbook (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        message TEXT NOT NULL,
-        website TEXT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
-    `);
-} catch (error) {
-    console.error("Failed to create guestbook table:", error);
+async function initializeDb() {
+  try {
+      await db.execute(`
+        CREATE TABLE IF NOT EXISTS guestbook (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT NOT NULL,
+          message TEXT NOT NULL,
+          website TEXT,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+      `);
+  } catch (error) {
+      console.error("Failed to create guestbook table:", error);
+  }
 }
+
+initializeDb();
 
 
 export type Entry = {
