@@ -31,6 +31,21 @@ export default function AdminPage() {
       setLoading(false);
     }
   };
+  
+  const handleDelete = async (formData: FormData) => {
+      await deleteEntry(formData);
+      // After deleting, refresh the entries list
+      try {
+        if(secret) {
+          const plainEntries = await getAdminEntries(secret);
+          setEntries(plainEntries);
+        }
+      } catch (e: any) {
+        console.error(e);
+        setError(e.message || "Failed to reload entries.");
+      }
+  }
+
 
   if (!secret) {
     return (
@@ -77,7 +92,7 @@ export default function AdminPage() {
             <div key={entry.id} className="guestbook-entry">
               <EditEntryForm entry={entry} adminSecret={secret} />
 
-              <form action={deleteEntry}>
+              <form action={handleDelete}>
                   <input type="hidden" name="id" value={entry.id} />
                   <input type="hidden" name="adminSecret" value={secret} />
                   <button type="submit">Delete</button>
