@@ -1,3 +1,4 @@
+
 "use server";
 
 import { z } from "zod";
@@ -58,7 +59,7 @@ export async function addEntry(prevState: State, formData: FormData): Promise<St
 }
 
 export async function updateEntry(prevState: State, formData: FormData): Promise<State> {
-    if (process.env.ADMIN_SECRET !== formData.get("adminSecret")) {
+    if (process.env.NEXT_PUBLIC_ADMIN_SECRET !== formData.get("adminSecret")) {
         return { message: "error", errors: { _form: ["Unauthorized."] } as any };
     }
 
@@ -92,7 +93,7 @@ export async function updateEntry(prevState: State, formData: FormData): Promise
 
 
 export async function deleteEntry(formData: FormData) {
-    if (process.env.ADMIN_SECRET !== formData.get("adminSecret")) {
+    if (process.env.NEXT_PUBLIC_ADMIN_SECRET !== formData.get("adminSecret")) {
         // This should be a proper error object, but for simplicity we'll keep it as a console log.
         console.error("Unauthorized delete attempt");
         return;
