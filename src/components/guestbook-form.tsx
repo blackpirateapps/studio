@@ -47,7 +47,7 @@ export function GuestbookForm() {
           {state.errors?.website && <p className="form-error">{state.errors.website[0]}</p>}
         </div>
       </div>
-      <div className="form-field">
+      <div className="form-field message-field">
         <label htmlFor="message">Message</label>
         <textarea id="message" name="message" required placeholder="Hello world!" />
         {state.errors?.message && <p className="form-error">{state.errors.message[0]}</p>}
