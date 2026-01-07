@@ -43,7 +43,7 @@ export function EditEntryForm({ entry, adminSecret }: EditEntryFormProps) {
                     <span className="entry-name">{entry.name}</span>
                   </h3>
                   <p className="entry-date">
-                    {new Date(entry.created_at).toLocaleString()}
+                    {new Date(entry.created_at).toLocaleString('en-US')}
                   </p>
                 </div>
                  {entry.website && (
