@@ -1,8 +1,8 @@
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
+import { useFormStatus } from "react-dom";
 import { addEntry } from "@/app/actions";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useActionState } from "react";
 
 const initialState = {
   message: "" as "error" | "success" | "",
@@ -19,7 +19,7 @@ function SubmitButton() {
 }
 
 export function GuestbookForm() {
-  const [state, formAction] = useFormState(addEntry, initialState);
+  const [state, formAction] = useActionState(addEntry, initialState);
   const formRef = useRef<HTMLFormElement>(null);
   const [formMessage, setFormMessage] = useState<string | null>(null);
 
