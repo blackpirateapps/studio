@@ -1,9 +1,2 @@
-import type {Config} from 'tailwindcss';
-
-export default {
-  content: [],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
-} satisfies Config;
+// This file is intentionally blank to disable Tailwind CSS processing.
+export default {};
