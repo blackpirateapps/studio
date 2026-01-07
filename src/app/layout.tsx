@@ -1,4 +1,5 @@
 import type {Metadata} from 'next';
+import './custom.css';
 
 export const metadata: Metadata = {
   title: 'Simple Guestbook',

@@ -34,28 +34,28 @@ export function GuestbookForm() {
   }, [state]);
 
   return (
-    <form ref={formRef} action={formAction}>
-      <div>
-        <div>
+    <form ref={formRef} action={formAction} className="guestbook-form">
+      <div className="form-row">
+        <div className="form-field">
           <label htmlFor="name">Name</label>
           <input type="text" id="name" name="name" required placeholder="Your Name" />
-          {state.errors?.name && <p>{state.errors.name[0]}</p>}
+          {state.errors?.name && <p className="form-error">{state.errors.name[0]}</p>}
         </div>
-        <div>
+        <div className="form-field">
           <label htmlFor="website">Website (Optional)</label>
           <input type="url" id="website" name="website" placeholder="https://your-site.com" />
-          {state.errors?.website && <p>{state.errors.website[0]}</p>}
+          {state.errors?.website && <p className="form-error">{state.errors.website[0]}</p>}
         </div>
       </div>
-      <div>
+      <div className="form-field">
         <label htmlFor="message">Message</label>
         <textarea id="message" name="message" required placeholder="Hello world!" />
-        {state.errors?.message && <p>{state.errors.message[0]}</p>}
+        {state.errors?.message && <p className="form-error">{state.errors.message[0]}</p>}
       </div>
-      <div>
+      <div className="form-actions">
         <SubmitButton />
       </div>
-      {formMessage && <p>{formMessage}</p>}
+      {formMessage && <p className="form-status">{formMessage}</p>}
     </form>
   );
 }

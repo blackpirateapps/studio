@@ -14,7 +14,7 @@ export default async function Home() {
   }
 
   return (
-    <div>
+    <div className="container">
       <main>
         <header>
           <h1>
@@ -25,14 +25,14 @@ export default async function Home() {
           </p>
         </header>
 
-        <section>
+        <section className="form-section">
           <h2>Leave Your Mark</h2>
           <GuestbookForm />
         </section>
 
         <section>
           {error ? (
-             <div>
+             <div className="error-box">
                 <h3>Database Error</h3>
                 <p>
                   {error}
