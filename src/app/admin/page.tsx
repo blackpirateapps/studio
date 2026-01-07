@@ -2,9 +2,8 @@
 'use client';
 
 import { GuestbookForm } from "@/components/guestbook-form";
-import { deleteEntry } from "@/app/actions";
 import { EditEntryForm } from "./edit-entry-form";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import type { Entry } from "@/lib/db";
 import { getAdminEntries } from "./actions";
 
@@ -32,21 +31,6 @@ export default function AdminPage() {
     }
   };
   
-  const handleDelete = async (formData: FormData) => {
-      await deleteEntry(formData);
-      // After deleting, refresh the entries list
-      try {
-        if(secret) {
-          const plainEntries = await getAdminEntries(secret);
-          setEntries(plainEntries);
-        }
-      } catch (e: any) {
-        console.error(e);
-        setError(e.message || "Failed to reload entries.");
-      }
-  }
-
-
   if (!secret) {
     return (
       <div className="container">
@@ -89,14 +73,8 @@ export default function AdminPage() {
          {loading && <p>Loading entries...</p>}
         <div className="entries-container">
           {entries.map((entry) => (
-            <div key={entry.id} className="guestbook-entry">
+            <div key={entry.id}>
               <EditEntryForm entry={entry} adminSecret={secret} />
-
-              <form action={handleDelete}>
-                  <input type="hidden" name="id" value={entry.id} />
-                  <input type="hidden" name="adminSecret" value={secret} />
-                  <button type="submit">Delete</button>
-              </form>
             </div>
           ))}
         </div>

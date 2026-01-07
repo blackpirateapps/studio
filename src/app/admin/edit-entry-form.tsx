@@ -2,8 +2,19 @@
 
 import type { Entry } from "@/lib/db";
 import { useActionState, useEffect, useRef, useState } from "react";
-import { updateEntry } from "@/app/actions";
+import { deleteEntry, updateEntry } from "@/app/actions";
 import { useFormStatus } from "react-dom";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 type EditEntryFormProps = {
     entry: Entry;
@@ -37,7 +48,7 @@ export function EditEntryForm({ entry, adminSecret }: EditEntryFormProps) {
 
     if (!isEditing) {
         return (
-             <div>
+             <div className="guestbook-entry">
                 <div className="entry-header">
                   <h3>
                     <span className="entry-name">{entry.name}</span>
@@ -54,7 +65,32 @@ export function EditEntryForm({ entry, adminSecret }: EditEntryFormProps) {
                 <div className="entry-body">
                   <p>{entry.message}</p>
                 </div>
-                <button onClick={() => setIsEditing(true)}>Edit</button>
+                <div className="form-actions">
+                    <button onClick={() => setIsEditing(true)}>Edit</button>
+                    <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                            <button type="button">Delete</button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                This action cannot be undone. This will permanently delete the entry.
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <form action={deleteEntry}>
+                                    <input type="hidden" name="id" value={entry.id} />
+                                    <input type="hidden" name="adminSecret" value={adminSecret} />
+                                    <AlertDialogAction asChild>
+                                        <button type="submit">Delete</button>
+                                    </AlertDialogAction>
+                                </form>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
+                </div>
             </div>
         );
     }
@@ -78,7 +114,7 @@ export function EditEntryForm({ entry, adminSecret }: EditEntryFormProps) {
             </div>
              <div className="form-field message-field">
                 <label htmlFor={`message-${entry.id}`}>Message</label>
-                <textarea id={`message-${entry.id}`} name="message" required defaultValue={entry.message} />
+                <textarea id={`message-${entry.id}`} name="message" required defaultValue={entry.message}></textarea>
                 {state.errors?.message && <p className="form-error">{state.errors.message[0]}</p>}
             </div>
 
