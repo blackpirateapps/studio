@@ -3,7 +3,7 @@
 
 import { GuestbookForm } from "@/components/guestbook-form";
 import { EditEntryForm } from "./edit-entry-form";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Entry } from "@/lib/db";
 import { getAdminEntries } from "./actions";
 
@@ -14,21 +14,24 @@ export default function AdminPage() {
   const [error, setError] = useState<string | null>(null);
   const [secretInput, setSecretInput] = useState('');
 
-  const handleSecretSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const fetchEntries = async (currentSecret: string) => {
     setLoading(true);
     setError(null);
     try {
-      const plainEntries = await getAdminEntries(secretInput);
+      const plainEntries = await getAdminEntries(currentSecret);
       setEntries(plainEntries);
-      setSecret(secretInput);
     } catch (e: any) {
       console.error(e);
       setError(e.message || "Failed to load entries.");
-      setSecret(null);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSecretSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setSecret(secretInput);
+    await fetchEntries(secretInput);
   };
   
   if (!secret) {
@@ -71,6 +74,7 @@ export default function AdminPage() {
       <section>
         <h2>Manage Entries</h2>
          {loading && <p>Loading entries...</p>}
+        {error && <p style={{color: 'red'}}>{error}</p>}
         <div className="entries-container">
           {entries.map((entry) => (
             <div key={entry.id}>
