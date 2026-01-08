@@ -1,3 +1,4 @@
+
 import { createClient, type Client } from "@libsql/client";
 import "dotenv/config";
 
@@ -23,9 +24,12 @@ export function getDbClient(): Client {
 
   } else {
     // For local development, use a local SQLite file.
-    client = createClient({
-      url: "file:local.db",
-    });
+    if (!global.client) {
+        global.client = createClient({
+            url: "file:local.db",
+        });
+    }
+    client = global.client;
   }
 
   return client;
