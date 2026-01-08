@@ -2,6 +2,11 @@
 import { createClient, type Client } from "@libsql/client";
 import "dotenv/config";
 
+// Use a global to hold the client in dev environments to avoid creating multiple connections.
+declare global {
+    var client: Client | undefined;
+}
+
 let client: Client | null = null;
 
 export function getDbClient(): Client {
@@ -14,7 +19,10 @@ export function getDbClient(): Client {
     const authToken = process.env.TURSO_AUTH_TOKEN;
 
     if (!url) {
-      throw new Error("TURSO_DATABASE_URL is not set for production");
+      throw new Error("TURSO_DATABASE_URL environment variable is not set for production.");
+    }
+    if (!authToken) {
+        throw new Error("TURSO_AUTH_TOKEN environment variable is not set for production.");
     }
     
     client = createClient({
@@ -54,7 +62,10 @@ async function initializeDb() {
   }
 }
 
-initializeDb();
+// Only run initialization in a server-side context
+if (typeof process !== 'undefined') {
+    initializeDb();
+}
 
 
 export type Entry = {
